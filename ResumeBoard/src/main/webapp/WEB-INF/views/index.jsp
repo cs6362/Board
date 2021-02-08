@@ -11,7 +11,7 @@
 
 	$(function(){
 		boardList();
-		
+		boardrInsert();
 	});
 	
 	function boardList(){
@@ -43,12 +43,39 @@
 			.append($('<td>').html(board.boardDate))
 			.append($('<td>').html('<button id="btnSelect">조회</button>'))
 			.append($('<td>').html('<button id="btnDelete">삭제</button>'))
-			.append($('<input type="hidden" id="hidden_boardNo" />').val(board.boardNo))
+			.append($('<input type="hidden" id="hidden_boardContent" />').val(board.boardContent)) 
 			.appendTo('tbody');
 		});
 	}
 
-
+	/* 5. 사용자 등록 */
+	function boardrInsert() {
+		$('#btnInsert').click(function(){
+			var boardTitle = $('input:text[name="boardTitle"]').val();
+			var boardWriter = $('input:text[name="boardWriter"]').val();
+			var boardContent = $('textarea[name="boardContent"]').val();
+			alert(boardContent);
+			var obj = {"boardTitle":boardTitle,"boardWriter":boardWriter,"boardContent":boardContent};
+			$.ajax({
+				url: 'users',
+				type: 'post',
+				data: JSON.stringify(obj),  // @RequestBody UserDto userDto
+				contentType: 'application/json; charset=utf-8',  // data 를 @RequestBody 가 받을 때 작성
+				dataType: 'json',
+				success: function(response) {
+					// response
+					// {"result":1}
+					if (response.result == 1) {
+						alert('사용자가 등록되었습니다.');
+						boardList();
+					}
+				},
+				error: function() {
+					alert('에러 발생');
+				}
+			});
+		});
+	}
 
 </script>
 </head>
@@ -58,21 +85,12 @@
 	
 		<div class="left">
 			<h3>사용자 등록/수정</h3>
-			<label>아이디</label>
-			<input type="text" name="userId" /><br/>
-			<label>이름</label>
-			<input type="text" name="userName" /><br/>
-			<label>성별</label>
-			<input type="radio" name="gender" value="남" />남<br/>
-			<input type="radio" name="gender" value="여" />여<br/>
-			<label>주소</label>
-			<select name="address">
-				<option value="서울">서울</option>
-				<option value="경기">경기</option>
-				<option value="인천">인천</option>
-				<option value="부산">부산</option>
-				<option value="제주">제주</option>
-			</select>
+			<label>제목</label>
+			<input type="text" name="boardTitle" /><br/>
+			<label>글쓴이</label>
+			<input type="text" name="boardWriter" /><br/>
+			<label>내용</label>
+			<textarea rows="3" cols="10" name="boardContent"></textarea>
 			<br/><br/>
 			<input type="button" value="등록" id="btnInsert" />
 			<input type="button" value="수정" id="btnUpdate" />
@@ -80,14 +98,14 @@
 		</div>
 
 		<div class="right">
-			<h3>사용자 목록</h3>
+			<h3>게시판 목록</h3>
 			<table>
 				<thead>
 					<tr>
-						<td>아이디</td>
-						<td>이름</td>
-						<td>성별</td>
-						<td>주소</td>
+						<td>번호</td>
+						<td>제목</td>
+						<td>글쓴이</td>
+						<td>날짜</td>
 						<td colspan="2">비고</td>
 					</tr>
 				</thead>

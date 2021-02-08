@@ -9,9 +9,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT BOARDNO
 						,BOARDTITLE
 						,BOARDWRITER
+						,BOARDCONTENT
 						,BOARDDATE
 						FROM BOARD
 	</select>
 
+
+	<insert id="insertBoard" parameterType="com.resume.board.dto.BoardDto">
+		INSERT INTO
+		 BOARD
+		VALUES (BOARD_SEQ.NEXTVAL,#{boardTitle},#{boardWriter},#{boardContent},SYSDATE)
+	</insert>
 
 </mapper>

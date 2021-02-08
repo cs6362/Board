@@ -1,5 +1,6 @@
 package com.resume.board.dto;
 
+
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class BoardDto {
 	private String boardNo;
 	private String boardTitle;
 	private String boardWriter;
+	private String boardContent;
 	private Date boardDate;
 	
 }
