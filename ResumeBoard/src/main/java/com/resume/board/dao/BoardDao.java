@@ -9,4 +9,6 @@ public interface BoardDao {
 	public List<BoardDto> selectBoardList();
 
 	public int insertBoard(BoardDto bDto);
+	
+	public BoardDto selectByBoardNo(String boardNo);
 }

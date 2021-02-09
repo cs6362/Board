@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.resume.board.command.BoardCommand;
 import com.resume.board.command.BoardInsertCommand;
 import com.resume.board.command.BoardListCommand;
+import com.resume.board.command.BoardViewCommand;
 import com.resume.board.dto.BoardDto;
 
 @Controller
@@ -45,7 +47,7 @@ public class BoardController {
 		return "index";
 	}
 
-	@RequestMapping(value="users",
+	@RequestMapping(value="boards",
 								method=RequestMethod.GET,
 								produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -56,7 +58,7 @@ public class BoardController {
 		return map;
 	}
 	
-	@RequestMapping(value="users",
+	@RequestMapping(value="boards",
 			method=RequestMethod.POST,
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -69,7 +71,22 @@ public class BoardController {
 	return boardCommand.execute(sqlSession, model);
 	}
 		
-		
+	
+	@RequestMapping(value="boards/{boardNo}",
+			method=RequestMethod.GET,
+			produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> selectByUserId(@PathVariable("boardNo") String boardNo,
+										  Model model) {
+	model.addAttribute("boardNo", boardNo);
+	boardCommand = new BoardViewCommand();
+	
+	return boardCommand.execute(sqlSession, model);
+}
+
+	
+	
+	
 }
 
 

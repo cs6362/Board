@@ -12,11 +12,14 @@
 	$(function(){
 		boardList();
 		boardrInsert();
+		boardSelect();
+		boardSelectResult();
+		
 	});
 	
 	function boardList(){
 		$.ajax({
-			url:'users',
+			url:'boards',
 			type:'get',
 			dataType:'json',
 			success:function(response){
@@ -43,7 +46,7 @@
 			.append($('<td>').html(board.boardDate))
 			.append($('<td>').html('<button id="btnSelect">조회</button>'))
 			.append($('<td>').html('<button id="btnDelete">삭제</button>'))
-			.append($('<input type="hidden" id="hidden_boardContent" />').val(board.boardContent)) 
+			.append($('<input type="hidden" id="hidden_boardNo" />').val(board.boardNo)) 
 			.appendTo('tbody');
 		});
 	}
@@ -57,7 +60,7 @@
 			alert(boardContent);
 			var obj = {"boardTitle":boardTitle,"boardWriter":boardWriter,"boardContent":boardContent};
 			$.ajax({
-				url: 'users',
+				url: 'boards',
 				type: 'post',
 				data: JSON.stringify(obj),  // @RequestBody UserDto userDto
 				contentType: 'application/json; charset=utf-8',  // data 를 @RequestBody 가 받을 때 작성
@@ -76,7 +79,40 @@
 			});
 		});
 	}
-
+	
+	/* 3. 사용자 정보 가져오기 */
+	function boardSelect() {
+		// ajax 를 통해서 동적으로 추가된 버튼은 $().click() 이 불가능하다.
+		// 동적으로 추가된 요소에 이벤트를 바인딩하려면 $().on() 을 사용한다.
+		$('body').on('click', '#btnSelect', function(){
+			// var userId = $(this).parents('tr').find('#hidden_userId').val();
+			var boardNo = $(this).closest('tr').find('#hidden_boardNo').val();
+			$.ajax({
+				url: 'boards/' + boardNo,  // @RequestMapping(value="users/{userId}")
+				type: 'get',
+				dataType: 'json',
+				success: function(response) {
+					// response
+					// {"result":true,"userDto":{"userId":"user2","userName":"사만다","gender":"여","address":"경기"}}
+					if (response.result == true) {
+						boardSelectResult(response);
+					}
+				},
+				error: function() {
+					alert('에러 발생');
+				}
+			});
+		});
+	}
+	
+	/* 4. 사용자 정보 출력하기 */
+	function boardSelectResult(response) {
+		var board = response.boardDto;
+		$('input:text[name="boardTitle"]').val(board.boardTitle);
+		$('input:text[name="boardWriter"]').val(board.boardWriter);
+		$('textarea[name="boardContent"]').val(board.boardContent);
+	
+	}
 </script>
 </head>
 <body>
@@ -90,7 +126,7 @@
 			<label>글쓴이</label>
 			<input type="text" name="boardWriter" /><br/>
 			<label>내용</label>
-			<textarea rows="3" cols="10" name="boardContent"></textarea>
+			<textarea rows="20" cols="30" name="boardContent"></textarea>
 			<br/><br/>
 			<input type="button" value="등록" id="btnInsert" />
 			<input type="button" value="수정" id="btnUpdate" />

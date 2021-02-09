@@ -21,4 +21,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		VALUES (BOARD_SEQ.NEXTVAL,#{boardTitle},#{boardWriter},#{boardContent},SYSDATE)
 	</insert>
 
+	<select id="selectByBoardNo" parameterType="String"  resultType="com.resume.board.dto.BoardDto">
+	 	SELECT BOARDNO
+						,BOARDTITLE
+						,BOARDWRITER
+						,BOARDCONTENT
+						,BOARDDATE
+						FROM BOARD
+						WHERE BOARDNO = #{boardNo}
+	</select>
+
 </mapper>
