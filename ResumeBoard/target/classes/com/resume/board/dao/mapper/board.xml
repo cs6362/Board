@@ -31,4 +31,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						WHERE BOARDNO = #{boardNo}
 	</select>
 
+	<delete id="deleteByBoardNo" parameterType="String">
+		DELETE
+		FROM  BOARD 
+		WHERE BOARDNO = #{boardNo}
+	</delete>
+
 </mapper>

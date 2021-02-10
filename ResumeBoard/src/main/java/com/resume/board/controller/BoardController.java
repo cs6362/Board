@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.resume.board.command.BoardCommand;
+import com.resume.board.command.BoardDeleteCommand;
 import com.resume.board.command.BoardInsertCommand;
 import com.resume.board.command.BoardListCommand;
 import com.resume.board.command.BoardViewCommand;
@@ -82,10 +83,19 @@ public class BoardController {
 	boardCommand = new BoardViewCommand();
 	
 	return boardCommand.execute(sqlSession, model);
-}
+	}
 
-	
-	
+	@RequestMapping(value="boards/{boardNo}",
+			method=RequestMethod.DELETE,
+			produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> deleteUser(@PathVariable("boardNo") String boardNo,
+									  Model model) {
+	model.addAttribute("boardNo", boardNo);
+	boardCommand = new BoardDeleteCommand();
+	return boardCommand.execute(sqlSession, model);
+	}
+		
 	
 }
 

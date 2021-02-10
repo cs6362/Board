@@ -8,12 +8,17 @@
 <!-- jQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
+	
+
 
 	$(function(){
 		boardList();
 		boardrInsert();
 		boardSelect();
-		boardSelectResult();
+		boardUpdate();
+		boardDelete();
+		init();
+		
 		
 	});
 	
@@ -38,9 +43,10 @@
 	function boardListResult(response) {
 		$('tbody').empty();
 		var boardList = response.boardList;
+		var count = 1;
 		$.each(boardList, function(i, board){
 			$('<tr>')
-			.append($('<td>').html(board.boardNo))
+			.append($('<td>').html(count++))
 			.append($('<td>').html(board.boardTitle))
 			.append($('<td>').html(board.boardWriter))
 			.append($('<td>').html(board.boardDate))
@@ -57,7 +63,6 @@
 			var boardTitle = $('input:text[name="boardTitle"]').val();
 			var boardWriter = $('input:text[name="boardWriter"]').val();
 			var boardContent = $('textarea[name="boardContent"]').val();
-			alert(boardContent);
 			var obj = {"boardTitle":boardTitle,"boardWriter":boardWriter,"boardContent":boardContent};
 			$.ajax({
 				url: 'boards',
@@ -108,10 +113,76 @@
 	/* 4. 사용자 정보 출력하기 */
 	function boardSelectResult(response) {
 		var board = response.boardDto;
+		$('input:hidden[name="boardNo"]').val(board.boardNo);
 		$('input:text[name="boardTitle"]').val(board.boardTitle);
 		$('input:text[name="boardWriter"]').val(board.boardWriter);
 		$('textarea[name="boardContent"]').val(board.boardContent);
 	
+	}
+	
+	/* 6. 사용자 수정 */
+	function boardUpdate() {
+		$('#btnUpdate').click(function(){
+			var boardNo = $('input:hidden[name="boardNo"]').val();
+			var boardTitle = $('input:text[name="boardTitle"]').val();
+			var boardWriter = $('input:text[name="boardWriter"]').val();
+			var boardContent = $('textarea[name="boardContent"]').val();
+			var obj = {"boardNo":boardNo,"boardTitle":boardTitle,"boardWriter":boardWriter,"boardContent":boardContent};
+			$.ajax({
+				url: 'boards',
+				type: 'put',
+				data: JSON.stringify(obj),
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				success: function(response) {
+					// response
+					// {"result":1}
+					if (response.result == 1) {
+						alert('게시물이 변경되었습니다.');
+						boardList();
+					}
+				},
+				error: function() {
+					alert('에러 발생');
+				}
+			});
+		});
+	}
+	
+	/* 7. 사용자 삭제 */
+	function boardDelete() {
+		$('body').on('click', '#btnDelete', function(){
+			var boardNo = $(this).closest('tr').find('#hidden_boardNo').val();
+			var check = confirm(' 삭제할까요?');
+			if (check) {
+				$.ajax({
+					url: 'boards/' + boardNo,
+					type: 'delete',
+					dataType: 'json',
+					success: function(response) {
+						// response
+						// {"result":1}
+						if (response.result == 1) {
+							alert(' 삭제되었습니다.');
+							boardList();
+						}
+					},
+					error: function() {
+						alert('에러 발생');
+					}
+				});
+			}
+		});
+	}
+	/* 8. 초기화 */
+	function init() {
+		$('#btnInit').click(function(){
+			$('input:hidden[name="boardNo"]').val('');
+			$('input:text[name="boardTitle"]').val('');
+			$('input:text[name="boardWriter"]').val('');
+			$('textarea[name="boardContent"]').val('');
+			boardList();
+		});
 	}
 </script>
 </head>
@@ -120,6 +191,7 @@
 	<div class="wrap">
 	
 		<div class="left">
+			<input type="hidden" name="boardNo"/>
 			<h3>사용자 등록/수정</h3>
 			<label>제목</label>
 			<input type="text" name="boardTitle" /><br/>
@@ -131,6 +203,8 @@
 			<input type="button" value="등록" id="btnInsert" />
 			<input type="button" value="수정" id="btnUpdate" />
 			<input type="button" value="초기화" id="btnInit" />
+
+
 		</div>
 
 		<div class="right">
