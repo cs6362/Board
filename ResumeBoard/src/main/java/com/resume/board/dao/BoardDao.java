@@ -13,4 +13,6 @@ public interface BoardDao {
 	public BoardDto selectByBoardNo(String boardNo);
 	
 	public int deleteByBoardNo(String boardNo);
+	
+	public int updateBoard(BoardDto bDto);
 }

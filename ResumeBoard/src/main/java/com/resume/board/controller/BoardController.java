@@ -17,6 +17,7 @@ import com.resume.board.command.BoardCommand;
 import com.resume.board.command.BoardDeleteCommand;
 import com.resume.board.command.BoardInsertCommand;
 import com.resume.board.command.BoardListCommand;
+import com.resume.board.command.BoardUpdateCommand;
 import com.resume.board.command.BoardViewCommand;
 import com.resume.board.dto.BoardDto;
 
@@ -95,6 +96,20 @@ public class BoardController {
 	boardCommand = new BoardDeleteCommand();
 	return boardCommand.execute(sqlSession, model);
 	}
+	
+	@RequestMapping(value="boards",
+			method=RequestMethod.PUT,
+			produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> updateUser(@RequestBody BoardDto boardDto,
+									  Model model) {
+	if (boardDto != null) {
+		model.addAttribute("boardDto", boardDto);
+		boardCommand = new BoardUpdateCommand();
+	}
+	return boardCommand.execute(sqlSession, model);
+	}
+	
 		
 	
 }

@@ -36,5 +36,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM  BOARD 
 		WHERE BOARDNO = #{boardNo}
 	</delete>
+	
+	<update id="updateBoard" parameterType="com.resume.board.dto.BoardDto">
+		UPDATE BOARD 
+		SET BOARDTITLE = #{ boardTitle}, 
+				BOARDWRITER = #{boardWriter},
+				BOARDCONTENT = #{boardContent},
+				BOARDDATE = SYSDATE
+		WHERE
+				BOARDNO = #{boardNo} 
+	
+	</update>
 
 </mapper>
