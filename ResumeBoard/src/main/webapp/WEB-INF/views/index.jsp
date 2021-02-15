@@ -39,7 +39,7 @@
 		});
 	}
 	
-	/* 2. 사용자 목록 테이블 만들기 */
+	/*  게시판 등록 게시판 만들기  */
 	function boardListResult(response) {
 		$('tbody').empty();
 		var boardList = response.boardList;
@@ -57,7 +57,7 @@
 		});
 	}
 
-	/* 5. 사용자 등록 */
+	/*  게시판 등록 */
 	function boardrInsert() {
 		$('#btnInsert').click(function(){
 			var boardTitle = $('input:text[name="boardTitle"]').val();
@@ -85,7 +85,7 @@
 		});
 	}
 	
-	/* 3. 사용자 정보 가져오기 */
+	/*  게시판 정보 가져오기  */
 	function boardSelect() {
 		// ajax 를 통해서 동적으로 추가된 버튼은 $().click() 이 불가능하다.
 		// 동적으로 추가된 요소에 이벤트를 바인딩하려면 $().on() 을 사용한다.
@@ -110,7 +110,7 @@
 		});
 	}
 	
-	/* 4. 사용자 정보 출력하기 */
+	/*  게시판 정보 출력하기 */
 	function boardSelectResult(response) {
 		var board = response.boardDto;
 		$('input:hidden[name="boardNo"]').val(board.boardNo);
@@ -120,7 +120,7 @@
 	
 	}
 	
-	/* 6. 사용자 수정 */
+	/*  게시판 수정 */
 	function boardUpdate() {
 		$('#btnUpdate').click(function(){
 			var boardNo = $('input:hidden[name="boardNo"]').val();
@@ -149,7 +149,7 @@
 		});
 	}
 	
-	/* 7. 사용자 삭제 */
+	/*  게시판 삭제 */
 	function boardDelete() {
 		$('body').on('click', '#btnDelete', function(){
 			var boardNo = $(this).closest('tr').find('#hidden_boardNo').val();
